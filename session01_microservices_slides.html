@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide Bài Giảng: Session 01 - Tổng Quan Kiến Trúc Microservices</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    .code-block {
+      font-family: 'Fira Code', 'Courier New', Courier, monospace;
+    }
+    .slide {
+      display: none;
+    }
+    .slide.active {
+      display: flex;
+    }
+    .arch-box {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased min-h-screen flex flex-col justify-between p-4 md:p-8">
+
+  <!-- TOP BAR: NAVIGATION & PROGRESS -->
+  <header class="w-full max-w-5xl mx-auto flex items-center justify-between pb-4 border-b border-[var(--border)] mb-4">
+    <div class="flex items-center space-x-3">
+      <span class="bg-indigo-600 text-white font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider">Session 01</span>
+      <h1 class="text-sm md:text-base font-semibold text-[var(--muted-foreground)]">Tổng Quan Kiến Trúc Microservices</h1>
+    </div>
+    <div class="flex items-center space-x-3">
+      <span id="slide-counter" class="text-xs md:text-sm font-mono font-medium text-[var(--muted-foreground)]">Slide 1 / 17</span>
+    </div>
+  </header>
+
+  <!-- PROGRESS BAR -->
+  <div class="w-full max-w-5xl mx-auto bg-gray-200 dark:bg-gray-800 h-1.5 rounded-full overflow-hidden mb-4">
+    <div id="progress-bar" class="bg-indigo-600 h-full w-[5.88%] transition-all duration-300"></div>
+  </div>
+
+  <!-- MAIN SLIDE CONTAINER -->
+  <main class="w-full max-w-5xl mx-auto flex-1 flex flex-col justify-center">
+
+    <!-- SLIDE 1: TRANG TIÊU ĐỀ -->
+    <div class="slide active flex-col items-center justify-center text-center py-10 px-6 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <div class="mb-4 p-3 bg-indigo-50 dark:bg-indigo-950/50 rounded-2xl border border-indigo-200 dark:border-indigo-800 inline-block">
+        <svg class="w-12 h-12 text-indigo-600 dark:text-indigo-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+        </svg>
+      </div>
+      <span class="bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-semibold text-xs px-3 py-1 rounded-full mb-3 uppercase tracking-wider">Java Spring Boot Microservices</span>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-[var(--foreground)] tracking-tight mb-3">
+        SESSION 01: TỔNG QUAN KIẾN TRÚC MICROSERVICES
+      </h1>
+      <p class="text-base md:text-lg text-[var(--muted-foreground)] max-w-2xl mb-6">
+        Từ Monolith đến Vi dịch vụ độc lập — Phương pháp tư duy & Kịch bản Videocode thực chiến
+      </p>
+      <div class="flex flex-wrap justify-center gap-2.5">
+        <span class="bg-[var(--background)] border border-[var(--border)] px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live-Coding Focused
+        </span>
+        <span class="bg-[var(--background)] border border-[var(--border)] px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-indigo-500"></span> DDD & Bounded Context
+        </span>
+        <span class="bg-[var(--background)] border border-[var(--border)] px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-blue-500"></span> REST API Communication
+        </span>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: MỤC TIÊU BÀI HỌC -->
+    <div class="slide flex-col justify-center py-8 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <h2 class="text-2xl md:text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-6 flex items-center gap-2">
+        <span>🎯</span> Mục Tiêu Bài Học
+      </h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-4 rounded-xl bg-[var(--background)] border border-[var(--border)] flex items-start space-x-3">
+          <div class="p-2 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 rounded-lg text-lg">🔍</div>
+          <div>
+            <h3 class="font-bold text-sm mb-1">Hiểu rõ bản chất kiến trúc</h3>
+            <p class="text-xs text-[var(--muted-foreground)]">So sánh bản chất Monolith, SOA và lý do sự ra đời của kiến trúc Microservices.</p>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-[var(--background)] border border-[var(--border)] flex items-start space-x-3">
+          <div class="p-2 bg-amber-100 dark:bg-amber-950 text-amber-600 rounded-lg text-lg">⚖️</div>
+          <div>
+            <h3 class="font-bold text-sm mb-1">Đánh giá Trade-offs</h3>
+            <p class="text-xs text-[var(--muted-foreground)]">Nắm vững ưu điểm cùng các thách thức về trễ mạng và distributed transactions.</p>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-[var(--background)] border border-[var(--border)] flex items-start space-x-3">
+          <div class="p-2 bg-purple-100 dark:bg-purple-950 text-purple-600 rounded-lg text-lg">🧠</div>
+          <div>
+            <h3 class="font-bold text-sm mb-1">Tư duy Domain-Driven Design (DDD)</h3>
+            <p class="text-xs text-[var(--muted-foreground)]">Áp dụng Bounded Context để vạch ranh giới phân tách nghiệp vụ chính xác.</p>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-[var(--background)] border border-[var(--border)] flex items-start space-x-3">
+          <div class="p-2 bg-emerald-100 dark:bg-emerald-950 text-emerald-600 rounded-lg text-lg">✂️</div>
+          <div>
+            <h3 class="font-bold text-sm mb-1">Tách Monolith thành Microservices</h3>
+            <p class="text-xs text-[var(--muted-foreground)]">Thực hành tách module E-Commerce thành 2 Spring Boot Apps riêng biệt qua REST API.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: LESSON 1 - MONOLITH ARCHITECTURE DIAGRAM -->
+    <div class="slide flex-col justify-center py-6 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Lesson 1: Giới thiệu kiến trúc</span>
+      </div>
+      <h2 class="text-xl md:text-2xl font-bold mb-3">🏛️ Sơ Đồ Kiến Trúc Monolith (Đơn Khối)</h2>
+      
+      <!-- DIAGRAM SVG/HTML FOR MONOLITH -->
+      <div class="p-4 bg-[var(--background)] border border-[var(--border)] rounded-xl mb-4">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+          <!-- Client -->
+          <div class="w-full md:w-1/4 p-3 bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-900 rounded-lg text-center">
+            <div class="text-xs font-bold text-blue-600 dark:text-blue-400">Client / Browser</div>
+            <div class="text-[11px] text-[var(--muted-foreground)]">Web / Mobile App</div>
+          </div>
+          
+          <div class="text-gray-400 font-bold hidden md:block">→ HTTP →</div>
+          <div class="text-gray-400 font-bold md:hidden">↓ HTTP ↓</div>
+
+          <!-- Monolith App Box -->
+          <div class="w-full md:w-2/4 p-4 bg-amber-50 dark:bg-amber-950/40 border-2 border-dashed border-amber-300 dark:border-amber-800 rounded-xl text-center">
+            <div class="text-xs font-bold text-amber-700 dark:text-amber-300 uppercase tracking-wider mb-2">1 File Deploy Duy Nhất (.JAR / Port 8080)</div>
+            <div class="grid grid-cols-3 gap-2">
+              <div class="p-2 bg-[var(--card)] border border-amber-200 dark:border-amber-900 rounded font-semibold text-xs text-amber-800 dark:text-amber-200">User Module</div>
+              <div class="p-2 bg-[var(--card)] border border-amber-200 dark:border-amber-900 rounded font-semibold text-xs text-amber-800 dark:text-amber-200">Product Module</div>
+              <div class="p-2 bg-[var(--card)] border border-amber-200 dark:border-amber-900 rounded font-semibold text-xs text-amber-800 dark:text-amber-200">Order Module</div>
+            </div>
+            <div class="mt-2 text-[10px] text-amber-600 dark:text-amber-400">⚡ Chạy chung trong 1 Process Java (JVM) duy nhất</div>
+          </div>
+
+          <div class="text-gray-400 font-bold hidden md:block">→ SQL →</div>
+          <div class="text-gray-400 font-bold md:hidden">↓ SQL ↓</div>
+
+          <!-- Shared DB -->
+          <div class="w-full md:w-1/4 p-3 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-900 rounded-lg text-center">
+            <div class="text-xs font-bold text-emerald-600 dark:text-emerald-400">1 Shared Database</div>
+            <div class="text-[11px] text-[var(--muted-foreground)]">PostgreSQL / MySQL</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-xs text-[var(--muted-foreground)] space-y-1">
+        <p>• Tất cả các module nghiệp vụ được đóng gói chung vào <strong>1 dự án / 1 file .jar duy nhất</strong>.</p>
+        <p>• Giao tiếp giữa các module diễn ra trực tiếp qua <strong>Java Method Call trong RAM</strong>.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: LESSON 1 - VIDEOCODE MONOLITH -->
+    <div class="slide flex-col justify-center py-6 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">📹 Videocode / Live-Coding #1</span>
+        <span class="text-xs bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded font-mono">Monolith Approach</span>
+      </div>
+      <h2 class="text-xl font-bold mb-3">Ứng Dụng Monolith (Chung 1 JVM & Database)</h2>
+      <pre class="bg-gray-950 text-gray-100 p-4 rounded-xl text-xs md:text-sm overflow-x-auto code-block leading-relaxed"><code><span class="text-purple-400">@Service</span>
+<span class="text-purple-400">@RequiredArgsConstructor</span>
+<span class="text-blue-400">public class</span> <span class="text-yellow-300">MonolithOrderService</span> {
+    
+    <span class="text-blue-400">private final</span> UserService userService;       <span class="text-gray-500">// Direct Dependency trong RAM</span>
+    <span class="text-blue-400">private final</span> ProductService productService; <span class="text-gray-500">// Direct Dependency trong RAM</span>
+    <span class="text-blue-400">private final</span> OrderRepository orderRepository;
+
+    <span class="text-purple-400">@Transactional</span>
+    <span class="text-blue-400">public</span> OrderResponse <span class="text-blue-300">createOrder</span>(Long userId, Long productId, <span class="text-blue-400">int</span> qty) {
+        UserDto user = userService.getUserById(userId);              <span class="text-gray-500">// Direct RAM method call</span>
+        ProductDto product = productService.reduceStock(productId, qty); <span class="text-gray-500">// Direct RAM method call</span>
+
+        Order order = <span class="text-blue-400">new</span> Order(userId, productId, product.getPrice() * qty, <span class="text-green-300">"CREATED"</span>);
+        Order saved = orderRepository.save(order);                   <span class="text-gray-500">// Same DB Transaction</span>
+        <span class="text-blue-400">return new</span> OrderResponse(saved.getId(), user.getName(), product.getName(), order.getTotalPrice());
+    }
+}</code></pre>
+    </div>
+
+    <!-- SLIDE 5: LESSON 1 - MONOLITH LIMITATIONS -->
+    <div class="slide flex-col justify-center py-8 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <span class="text-xs font-bold uppercase tracking-wider text-red-500">Lesson 1: Hạn chế</span>
+      <h2 class="text-2xl md:text-3xl font-bold mb-6">⚠️ "Nỗi Đau" Của Kiến Trúc Monolith</h2>
+      <div class="space-y-4">
+        <div class="p-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-xl flex items-start space-x-3">
+          <span class="text-red-500 font-bold text-lg">1.</span>
+          <div>
+            <h4 class="font-bold text-sm text-red-700 dark:text-red-300">Single Point of Failure (Rủi ro sập dây chuyền)</h4>
+            <p class="text-xs text-[var(--muted-foreground)]">Chỉ cần 1 bug trôi nổi gây OutOfMemory ở tính năng phụ → Sập luôn cả hệ thống bán hàng & thanh toán.</p>
+          </div>
+        </div>
+        <div class="p-4 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-xl flex items-start space-x-3">
+          <span class="text-amber-500 font-bold text-lg">2.</span>
+          <div>
+            <h4 class="font-bold text-sm text-amber-700 dark:text-amber-300">Scale không linh hoạt (Inflexible Scaling)</h4>
+            <p class="text-xs text-[var(--muted-foreground)]">Muốn tăng năng lực xử lý cho tính năng Tìm kiếm → Bắt buộc phải nhân bản (scale) toàn bộ file app lớn.</p>
+          </div>
+        </div>
+        <div class="p-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl flex items-start space-x-3">
+          <span class="text-gray-500 font-bold text-lg">3.</span>
+          <div>
+            <h4 class="font-bold text-sm">Deploy rủi ro & Tốc độ phát triển chậm</h4>
+            <p class="text-xs text-[var(--muted-foreground)]">Sửa 1 dòng code nhỏ cũng phải Rebuild & Re-deploy lại toàn bộ ứng dụng lớn.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: LESSON 1 - MICROSERVICES DIAGRAM -->
+    <div class="slide flex-col justify-center py-6 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Lesson 1: Giải pháp</span>
+      <h2 class="text-xl md:text-2xl font-bold mb-3">🌐 Sơ Đồ Kiến Trúc Microservices</h2>
+      
+      <!-- DIAGRAM SVG/HTML FOR MICROSERVICES -->
+      <div class="p-4 bg-[var(--background)] border border-[var(--border)] rounded-xl mb-4">
+        <div class="text-center mb-3">
+          <span class="bg-indigo-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">Client / API Gateway (Port 8080)</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <!-- User Service -->
+          <div class="p-3 bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900 rounded-lg text-center">
+            <div class="font-bold text-xs text-purple-700 dark:text-purple-300">User Service (8081)</div>
+            <div class="text-[10px] text-[var(--muted-foreground)] my-1">Process Java #1</div>
+            <div class="p-1.5 bg-[var(--card)] border border-purple-300 dark:border-purple-800 rounded text-[10px] font-semibold text-purple-800 dark:text-purple-200">🗄️ User DB</div>
+          </div>
+          <!-- Product Service -->
+          <div class="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-lg text-center">
+            <div class="font-bold text-xs text-blue-700 dark:text-blue-300">Product Service (8082)</div>
+            <div class="text-[10px] text-[var(--muted-foreground)] my-1">Process Java #2</div>
+            <div class="p-1.5 bg-[var(--card)] border border-blue-300 dark:border-blue-800 rounded text-[10px] font-semibold text-blue-800 dark:text-blue-200">🗄️ Product DB</div>
+          </div>
+          <!-- Order Service -->
+          <div class="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-lg text-center">
+            <div class="font-bold text-xs text-emerald-700 dark:text-emerald-300">Order Service (8083)</div>
+            <div class="text-[10px] text-[var(--muted-foreground)] my-1">Process Java #3</div>
+            <div class="p-1.5 bg-[var(--card)] border border-emerald-300 dark:border-emerald-800 rounded text-[10px] font-semibold text-emerald-800 dark:text-emerald-200">🗄️ Order DB</div>
+          </div>
+        </div>
+        <div class="mt-3 text-center text-[11px] text-indigo-600 dark:text-indigo-400 font-medium">
+          ↔️ Giao tiếp liên dịch vụ qua REST API (HTTP/JSON) hoặc Message Broker
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-2 text-xs text-[var(--muted-foreground)]">
+        <p>• <strong>Single Responsibility:</strong> Mỗi service phụ trách 1 nghiệp vụ duy nhất.</p>
+        <p>• <strong>Database-per-Service:</strong> Tuyệt đối không chia sẻ CSDL giữa các dịch vụ.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: LESSON 2 - COMPARISON TABLE -->
+    <div class="slide flex-col justify-center py-6 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Lesson 2: So sánh</span>
+      <h2 class="text-xl md:text-2xl font-bold mb-4">⚖️ So Sánh Monolith vs Microservices</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs md:text-sm text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-100 dark:bg-gray-800 text-[var(--foreground)]">
+              <th class="p-3 font-semibold border-b border-[var(--border)]">Tiêu chí</th>
+              <th class="p-3 font-semibold border-b border-[var(--border)] text-amber-600 dark:text-amber-400">Monolith</th>
+              <th class="p-3 font-semibold border-b border-[var(--border)] text-indigo-600 dark:text-indigo-400">Microservices</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[var(--border)]">
+            <tr>
+              <td class="p-3 font-bold">Giao tiếp inter-service</td>
+              <td class="p-3 text-[var(--muted-foreground)]">Gọi hàm RAM (Nanosecond)</td>
+              <td class="p-3 text-[var(--muted-foreground)]">HTTP REST / gRPC (Millisecond)</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">Quản lý Dữ liệu</td>
+              <td class="p-3 text-[var(--muted-foreground)]">1 DB chung (ACID Transaction)</td>
+              <td class="p-3 text-[var(--muted-foreground)]">Database-per-Service (Eventual Consistency)</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">Khả năng Scale</td>
+              <td class="p-3 text-[var(--muted-foreground)]">Scale toàn bộ ứng dụng</td>
+              <td class="p-3 text-[var(--muted-foreground)]">Scale từng service độc lập</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">Độ phức tạp ban đầu</td>
+              <td class="p-3 text-[var(--muted-foreground)]">Thấp (Code nhanh, đơn giản)</td>
+              <td class="p-3 text-[var(--muted-foreground)]">Cao (Cần DevOps, Tracing, Gateway)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: LESSON 2 - ADVANTAGES -->
+    <div class="slide flex-col justify-center py-8 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Lesson 2: Lợi ích</span>
+      <h2 class="text-2xl font-bold mb-6">🌟 Ưu Điểm Vượt Trội Của Microservices</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 rounded-xl">
+          <h4 class="font-bold text-sm text-emerald-700 dark:text-emerald-300 mb-1">📈 Fine-Grained Scaling</h4>
+          <p class="text-xs text-[var(--muted-foreground)]">Scale riêng <code class="bg-emerald-100 dark:bg-emerald-900 px-1 rounded">PaymentService</code> gấp 10 lần vào ngày Flash Sale mà không lãng phí CPU cho các service khác.</p>
+        </div>
+        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 rounded-xl">
+          <h4 class="font-bold text-sm text-emerald-700 dark:text-emerald-300 mb-1">🛡️ Isolation & Resilience</h4>
+          <p class="text-xs text-[var(--muted-foreground)]">Lỗi ở <code class="bg-emerald-100 dark:bg-emerald-900 px-1 rounded">NotificationService</code> không làm gián đoạn trải nghiệm mua hàng của người dùng.</p>
+        </div>
+        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 rounded-xl">
+          <h4 class="font-bold text-sm text-emerald-700 dark:text-emerald-300 mb-1">⚡ Autonomy & Speed</h4>
+          <p class="text-xs text-[var(--muted-foreground)]">Các nhóm Agile nhỏ tự chủ phát triển và deploy service của mình độc lập.</p>
+        </div>
+        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 rounded-xl">
+          <h4 class="font-bold text-sm text-emerald-700 dark:text-emerald-300 mb-1">🔀 Polyglot Architecture</h4>
+          <p class="text-xs text-[var(--muted-foreground)]">Tự do chọn công nghệ tốt nhất (Java Spring Boot cho Order, Python cho AI/Recommend).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: LESSON 2 - CHALLENGES -->
+    <div class="slide flex-col justify-center py-8 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <span class="text-xs font-bold uppercase tracking-wider text-red-500">Lesson 2: Đánh đổi</span>
+      <h2 class="text-2xl font-bold mb-6">💣 Thách Thức & Đánh Đổi (Trade-Offs)</h2>
+      <div class="space-y-3">
+        <div class="p-3.5 bg-[var(--background)] border border-[var(--border)] rounded-xl flex items-center space-x-3">
+          <span class="text-xl">🌐</span>
+          <div>
+            <h4 class="font-bold text-sm">Network Latency & Reliability (Trễ Mạng)</h4>
+            <p class="text-xs text-[var(--muted-foreground)]">Mạng có thể bị chập chờn, rớt kết nối hoặc trễ làm ảnh hưởng hiệu năng tổng.</p>
+          </div>
+        </div>
+        <div class="p-3.5 bg-[var(--background)] border border-[var(--border)] rounded-xl flex items-center space-x-3">
+          <span class="text-xl">🔄</span>
+          <div>
+            <h4 class="font-bold text-sm">Distributed Transactions (Mất ACID)</h4>
+            <p class="text-xs text-[var(--muted-foreground)]">Không thể dùng <code class="bg-gray-200 dark:bg-gray-800 px-1 rounded">@Transactional</code> trên 2 DB riêng → Phải triển khai Saga Pattern / Eventual Consistency.</p>
+          </div>
+        </div>
+        <div class="p-3.5 bg-[var(--background)] border border-[var(--border)] rounded-xl flex items-center space-x-3">
+          <span class="text-xl">🛠️</span>
+          <div>
+            <h4 class="font-bold text-sm">DevOps & Operational Complexity</h4>
+            <p class="text-xs text-[var(--muted-foreground)]">Cần quản lý Service Discovery, API Gateway, Distributed Tracing (Zipkin/Jaeger), Centralized Log.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: LESSON 2 - VIDEOCODE NETWORK LATENCY -->
+    <div class="slide flex-col justify-center py-6 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">📹 Videocode / Live-Coding #2</span>
+        <span class="text-xs bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400 px-2 py-0.5 rounded font-mono">Network Latency Pain</span>
+      </div>
+      <h2 class="text-xl font-bold mb-3">Thách Thức Trễ Mạng & Blocked Thread</h2>
+      <pre class="bg-gray-950 text-gray-100 p-4 rounded-xl text-xs md:text-sm overflow-x-auto code-block leading-relaxed"><code><span class="text-purple-400">@Service</span>
+<span class="text-blue-400">public class</span> <span class="text-yellow-300">OrderServiceWithRest</span> {
+    <span class="text-blue-400">private final</span> RestTemplate restTemplate = <span class="text-blue-400">new</span> RestTemplate();
+
+    <span class="text-blue-400">public boolean</span> <span class="text-blue-300">checkInventory</span>(Long productId) {
+        String url = <span class="text-green-300">"http://localhost:8081/products/"</span> + productId;
+        <span class="text-blue-400">try</span> {
+            <span class="text-gray-500">// NGHẼN MẠNG: Gọi qua HTTP chậm hơn hàm RAM 10.000 lần!</span>
+            <span class="text-gray-500">// Nếu Product Service chậm -> Thread ở OrderService bị Block -> Cháy Thread Pool!</span>
+            ProductDto product = restTemplate.getForObject(url, ProductDto.class);
+            <span class="text-blue-400">return</span> product != <span class="text-blue-400">null</span> && product.stock() > <span class="text-orange-400">0</span>;
+        } <span class="text-blue-400">catch</span> (Exception e) {
+            <span class="text-blue-400">return false</span>; <span class="text-gray-500">// Cần Circuit Breaker / Fallback!</span>
+        }
+    }
+}</code></pre>
+    </div>
+
+    <!-- SLIDE 11: LESSON 3 - DDD INTRO -->
+    <div class="slide flex-col justify-center py-8 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Lesson 3: Thiết kế theo Domain</span>
+      <h2 class="text-2xl md:text-3xl font-bold mb-4">🧠 Tư Duy Domain-Driven Design (DDD)</h2>
+      <p class="text-sm md:text-base text-[var(--muted-foreground)] mb-6">
+        Phương pháp thiết kế phần mềm lấy <strong>Nghiệp vụ cốt lõi (Domain)</strong> làm trung tâm thay vì xuất phát từ mô hình CSDL (Database-first).
+      </p>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900 rounded-xl">
+          <h4 class="font-bold text-base text-indigo-700 dark:text-indigo-300 mb-2">🎯 Bounded Context</h4>
+          <p class="text-xs text-[var(--muted-foreground)]">Ranh giới nghiệp vụ hữu hạn. Trong ranh giới này, một khái niệm (Model/Entity) có ý nghĩa hoàn toàn rõ ràng và không bị lẫn lộn.</p>
+        </div>
+        <div class="p-5 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900 rounded-xl">
+          <h4 class="font-bold text-base text-indigo-700 dark:text-indigo-300 mb-2">🗣️ Ubiquitous Language</h4>
+          <p class="text-xs text-[var(--muted-foreground)]">Ngôn ngữ chung thống nhất giữa Lập trình viên và Chuyên gia nghiệp vụ (Domain Expert) để tránh hiểu nhầm yêu cầu.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: LESSON 3 - BOUNDED CONTEXT DIAGRAM -->
+    <div class="slide flex-col justify-center py-6 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Lesson 3: Sơ đồ Bounded Context</span>
+      <h2 class="text-xl md:text-2xl font-bold mb-4">🧩 Biểu Diễn Khái Niệm "Product" Theo Bounded Context</h2>
+      
+      <!-- DIAGRAM SVG/HTML FOR BOUNDED CONTEXT -->
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="p-4 bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900 rounded-xl text-center">
+          <div class="font-bold text-xs text-purple-700 dark:text-purple-300 uppercase mb-2">Catalog Context</div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-purple-200 dark:border-purple-900 text-xs text-left font-mono">
+            <span class="font-bold text-purple-600">Product Entity:</span><br>
+            • name: String<br>
+            • description: String<br>
+            • price: Double
+          </div>
+        </div>
+        <div class="p-4 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-xl text-center">
+          <div class="font-bold text-xs text-blue-700 dark:text-blue-300 uppercase mb-2">Shipping Context</div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-blue-200 dark:border-blue-900 text-xs text-left font-mono">
+            <span class="font-bold text-blue-600">Package Item:</span><br>
+            • weight: Double<br>
+            • dimensions: String<br>
+            • isFragile: boolean
+          </div>
+        </div>
+        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-xl text-center">
+          <div class="font-bold text-xs text-emerald-700 dark:text-emerald-300 uppercase mb-2">Inventory Context</div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-emerald-200 dark:border-emerald-900 text-xs text-left font-mono">
+            <span class="font-bold text-emerald-600">Stock Item (SKU):</span><br>
+            • skuCode: String<br>
+            • warehouseLoc: String<br>
+            • quantity: int
+          </div>
+        </div>
+      </div>
+      <p class="text-xs text-center font-semibold text-indigo-600 dark:text-indigo-400 mt-4">👉 Không tạo 1 Class Product duy nhất chứa 50 thuộc tính chung cho toàn ứng dụng!</p>
+    </div>
+
+    <!-- SLIDE 13: LESSON 3 - VIDEOCODE PACKAGE STRUCTURE -->
+    <div class="slide flex-col justify-center py-6 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">📹 Videocode / Live-Coding #3</span>
+        <span class="text-xs bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded font-mono">DDD Refactor</span>
+      </div>
+      <h2 class="text-xl font-bold mb-3">Tổ Chức Package Theo Bounded Context</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <span class="text-xs font-bold text-red-500 block mb-1">❌ Cấu trúc cũ (Layered by Type):</span>
+          <pre class="bg-gray-950 text-gray-200 p-3 rounded-xl text-xs code-block leading-relaxed"><code>com.example.app
+├── controller
+│   ├── UserController.java
+│   └── ProductController.java
+├── service
+│   ├── UserService.java
+│   └── ProductService.java
+└── repository</code></pre>
+        </div>
+        <div>
+          <span class="text-xs font-bold text-emerald-500 block mb-1">✅ Chuẩn DDD (Packaged by Feature):</span>
+          <pre class="bg-gray-950 text-gray-200 p-3 rounded-xl text-xs code-block leading-relaxed"><code>com.example.app
+├── usercontext
+│   ├── UserController.java
+│   └── UserService.java
+├── productcontext
+│   ├── ProductController.java
+│   └── ProductService.java</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 14: LESSON 4 - 4 STEPS WORKFLOW DIAGRAM -->
+    <div class="slide flex-col justify-center py-6 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Lesson 4: Tách Module</span>
+      <h2 class="text-xl md:text-2xl font-bold mb-4">✂️ Sơ Đồ Quy Trình 4 Bước Tách Monolith</h2>
+      
+      <!-- DIAGRAM WORKFLOW -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+        <div class="p-4 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900 rounded-xl text-center relative">
+          <div class="w-8 h-8 bg-indigo-600 text-white font-bold rounded-full flex items-center justify-center mx-auto mb-2 text-sm">1</div>
+          <h4 class="font-bold text-xs text-indigo-700 dark:text-indigo-300 mb-1">Chia Bounded Context</h4>
+          <p class="text-[11px] text-[var(--muted-foreground)]">Phân tích nghiệp vụ để vạch ranh giới dịch vụ.</p>
+        </div>
+        <div class="p-4 bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900 rounded-xl text-center relative">
+          <div class="w-8 h-8 bg-purple-600 text-white font-bold rounded-full flex items-center justify-center mx-auto mb-2 text-sm">2</div>
+          <h4 class="font-bold text-xs text-purple-700 dark:text-purple-300 mb-1">Tách Database</h4>
+          <p class="text-[11px] text-[var(--muted-foreground)]">Chuyển sang Database-per-Service độc lập.</p>
+        </div>
+        <div class="p-4 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-xl text-center relative">
+          <div class="w-8 h-8 bg-blue-600 text-white font-bold rounded-full flex items-center justify-center mx-auto mb-2 text-sm">3</div>
+          <h4 class="font-bold text-xs text-blue-700 dark:text-blue-300 mb-1">Giao Tiếp REST API</h4>
+          <p class="text-[11px] text-[var(--muted-foreground)]">Thay gọi hàm direct bằng REST / Feign Client.</p>
+        </div>
+        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-xl text-center">
+          <div class="w-8 h-8 bg-emerald-600 text-white font-bold rounded-full flex items-center justify-center mx-auto mb-2 text-sm">4</div>
+          <h4 class="font-bold text-xs text-emerald-700 dark:text-emerald-300 mb-1">Eventual Consistency</h4>
+          <p class="text-[11px] text-[var(--muted-foreground)]">Xử lý đồng bộ dữ liệu qua Event/Queue.</p>
+        </div>
+      </div>
+      
+      <div class="text-center font-mono text-xs text-indigo-600 dark:text-indigo-400">
+        Luồng tổng quát: Bounded Context → Database-per-Service → REST API Client → Eventual Consistency
+      </div>
+    </div>
+
+    <!-- SLIDE 15: LESSON 4 - VIDEOCODE PRODUCT SERVICE -->
+    <div class="slide flex-col justify-center py-6 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">📹 Videocode / Live-Coding #4 (Phần 1)</span>
+        <span class="text-xs bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded font-mono">Port 8081</span>
+      </div>
+      <h2 class="text-lg font-bold mb-2">Xây Dựng Product Microservice Độc Lập</h2>
+      <pre class="bg-gray-950 text-gray-100 p-4 rounded-xl text-xs md:text-sm overflow-x-auto code-block leading-relaxed"><code><span class="text-purple-400">@RestController</span>
+<span class="text-purple-400">@RequestMapping</span>(<span class="text-green-300">"/products"</span>)
+<span class="text-blue-400">public class</span> <span class="text-yellow-300">ProductController</span> {
+
+    <span class="text-purple-400">@GetMapping</span>(<span class="text-green-300">"/{id}"</span>)
+    <span class="text-blue-400">public</span> ProductResponse <span class="text-blue-300">getProduct</span>(<span class="text-purple-400">@PathVariable</span> Long id) {
+        <span class="text-gray-500">// Trả dữ liệu từ Product DB độc lập</span>
+        <span class="text-blue-400">return new</span> ProductResponse(id, <span class="text-green-300">"Laptop Gaming ASUS"</span>, <span class="text-orange-400">1500.0</span>, <span class="text-orange-400">10</span>);
+    }
+}
+<span class="text-blue-400">record</span> <span class="text-yellow-300">ProductResponse</span>(Long id, String name, Double price, Integer stock) {}</code></pre>
+    </div>
+
+    <!-- SLIDE 16: LESSON 4 - VIDEOCODE ORDER SERVICE REST -->
+    <div class="slide flex-col justify-center py-6 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">📹 Videocode / Live-Coding #4 (Phần 2)</span>
+        <span class="text-xs bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded font-mono">Port 8082</span>
+      </div>
+      <h2 class="text-lg font-bold mb-2">Xây Dựng Order Microservice Gọi REST API</h2>
+      <pre class="bg-gray-950 text-gray-100 p-3.5 rounded-xl text-xs overflow-x-auto code-block leading-relaxed"><code><span class="text-purple-400">@RestController</span>
+<span class="text-purple-400">@RequestMapping</span>(<span class="text-green-300">"/orders"</span>)
+<span class="text-blue-400">public class</span> <span class="text-yellow-300">OrderController</span> {
+
+    <span class="text-blue-400">private final</span> RestTemplate restTemplate = <span class="text-blue-400">new</span> RestTemplate();
+
+    <span class="text-purple-400">@PostMapping</span>
+    <span class="text-blue-400">public</span> ResponseEntity&lt;?&gt; <span class="text-blue-300">createOrder</span>(<span class="text-purple-400">@RequestParam</span> Long productId, <span class="text-purple-400">@RequestParam</span> <span class="text-blue-400">int</span> qty) {
+        <span class="text-gray-500">// 1. Gọi REST sang Product Service ở Port 8081</span>
+        String url = <span class="text-green-300">"http://localhost:8081/products/"</span> + productId;
+        ProductDto product = restTemplate.getForObject(url, ProductDto.class);
+
+        <span class="text-blue-400">if</span> (product == <span class="text-blue-400">null</span> || product.stock() &lt; qty) {
+            <span class="text-blue-400">return</span> ResponseEntity.badRequest().body(<span class="text-green-300">"Hàng không đủ tồn kho!"</span>);
+        }
+
+        <span class="text-gray-500">// 2. Tạo đơn hàng thành công</span>
+        Map&lt;String, Object&gt; orderResult = Map.of(
+            <span class="text-green-300">"orderId"</span>, UUID.randomUUID().toString(),
+            <span class="text-green-300">"productName"</span>, product.name(),
+            <span class="text-green-300">"totalPrice"</span>, product.price() * qty
+        );
+        <span class="text-blue-400">return</span> ResponseEntity.ok(orderResult);
+    }
+}</code></pre>
+    </div>
+
+    <!-- SLIDE 17: SUMMARY & HOMEWORK -->
+    <div class="slide flex-col justify-center py-8 px-6 md:px-10 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-lg">
+      <h2 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-4">🏁 Tổng Kết & Bài Tập Về Nhà</h2>
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <div class="p-4 bg-[var(--background)] border border-[var(--border)] rounded-xl">
+          <h4 class="font-bold text-sm mb-2">📌 Điểm Cốt Lõi Cần Nhớ</h4>
+          <ul class="text-xs space-y-1.5 text-[var(--muted-foreground)] list-disc pl-4">
+            <li>Microservices không phải bạc tỷ — hãy bắt đầu từ Monolith nếu app còn nhỏ.</li>
+            <li>Nguyên tắc bất di bất dịch: <strong>Database-per-Service</strong>.</li>
+            <li>Dùng DDD và Bounded Context để phân vạch ranh giới dịch vụ.</li>
+          </ul>
+        </div>
+        <div class="p-4 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900 rounded-xl">
+          <h4 class="font-bold text-sm text-indigo-700 dark:text-indigo-300 mb-2">🏠 Bài Tập Thực Hành (Homework)</h4>
+          <p class="text-xs text-[var(--muted-foreground)] mb-2">1. Chạy 2 dự án Spring Boot thực tế (<code class="bg-indigo-100 dark:bg-indigo-900 px-1 rounded">product-service</code> 8081 & <code class="bg-indigo-100 dark:bg-indigo-900 px-1 rounded">order-service</code> 8082) và test với Postman.</p>
+          <p class="text-xs text-[var(--muted-foreground)]">2. Nâng cấp code: Thay thế <code class="bg-indigo-100 dark:bg-indigo-900 px-1 rounded">RestTemplate</code> bằng <code class="bg-indigo-100 dark:bg-indigo-900 px-1 rounded">Spring Cloud OpenFeign</code>.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM BAR: CONTROLS -->
+  <footer class="w-full max-w-5xl mx-auto flex items-center justify-between pt-4 border-t border-[var(--border)] mt-4">
+    <button id="btn-prev" onclick="changeSlide(-1)" class="px-4 py-2 bg-[var(--card)] border border-[var(--border)] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl text-sm font-semibold transition flex items-center space-x-1 disabled:opacity-40 disabled:cursor-not-allowed">
+      <span>← Slide trước</span>
+    </button>
+
+    <div class="hidden sm:flex items-center space-x-2 text-xs text-[var(--muted-foreground)]">
+      <span>Mẹo: Dùng phím mũi tên <kbd class="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-800 rounded border border-[var(--border)] font-mono text-[10px]">←</kbd> <kbd class="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-800 rounded border border-[var(--border)] font-mono text-[10px]">→</kbd> để chuyển slide</span>
+    </div>
+
+    <button id="btn-next" onclick="changeSlide(1)" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold transition flex items-center space-x-1 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
+      <span>Slide tiếp →</span>
+    </button>
+  </footer>
+
+  <!-- INTERACTIVE JAVASCRIPT -->
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const slideCounter = document.getElementById('slide-counter');
+    const progressBar = document.getElementById('progress-bar');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+
+    function updateSlide() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      // Update counter & progress
+      slideCounter.innerText = `Slide ${currentSlide + 1} / ${totalSlides}`;
+      const percentage = ((currentSlide + 1) / totalSlides) * 100;
+      progressBar.style.width = `${percentage}%`;
+
+      // Update button states
+      btnPrev.disabled = currentSlide === 0;
+      btnNext.disabled = currentSlide === totalSlides - 1;
+    }
+
+    function changeSlide(direction) {
+      currentSlide += direction;
+      if (currentSlide < 0) currentSlide = 0;
+      if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+      updateSlide();
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        changeSlide(-1);
+      } else if (e.key === 'ArrowRight' || e.key === ' ') {
+        changeSlide(1);
+      }
+    });
+
+    // Initialize
+    updateSlide();
+  </script>
+
+</body>
+</html>
